@@ -38,7 +38,7 @@ For object detection, the application must first be trained with a large number 
 However, since the application aims to detect only humans, it use an official pre-trained YOLOv4 model that is able to detect 80 classes without additional training data.
 Download pre-trained yolov4.weights file: https://drive.google.com/file/d/1VCRU3SpO5x76KngBr8FHAGR68UqMgbEs/view?usp=sharing <br>
 
-You must download and extract the weights.zip file and place the yolov4.weights file in data directory of your workspace(./data/yolov4.weights).
+You must download and extract the weights.zip file and place the yolov4.weights file in the data directory of your workspace(./data/yolov4.weights).
 If the download doesn't work properly, refer to the [reference](https://github.com/theAIGuysCode/yolov4-deepsort) in this tutorial.<br>
 
 The weight file downloaded is a darknet weight file. Transformation is required to apply file to tensorflow models.
@@ -53,14 +53,66 @@ Likewise, in another place with two or more entrances, the application should be
 Simultaneous processing can be done through communication, such as ROS systems, but this tutorial combines images for easy processing.<br>
 
 The videos going to use in the tutorial are entrance to the front and back door before the start of DLIP class at Handong Global University.
-You can download sample videos here: https://drive.google.com/file/d/10Cts1ObT_e_8B6jleXzUCb2PsgGcoMiM/view?usp=sharing <br>
+You can download and extract the videos.zip file and place the videos directory in the data directory(./data/videos/frontdoor.mp4).
+Download sample videos: https://drive.google.com/file/d/10Cts1ObT_e_8B6jleXzUCb2PsgGcoMiM/view?usp=sharing <br>
 
 ### Front door
-<p align="center"><img src="data/helpers/demo.gif"\></p>
+<p align="center"><img src="data/helpers/frontdoor.JPG" width="400" height="240"\></p>
 
 ### Back door
-<p align="center"><img src="data/helpers/demo.gif"\></p>
+<p align="center"><img src="data/helpers/backdoor.JPG" width="400" height="240"\></p>
 
+### Combining two 
+```bash
+import cv2 
+import numpy as np
+
+cap1 = cv2.VideoCapture('./data/videos/frontdoor.mp4')
+if not cap1.isOpened():
+    print("Video1 open failed!")
+w1 = round(cap1.get(cv2.CAP_PROP_FRAME_WIDTH))
+h1 = round(cap1.get(cv2.CAP_PROP_FRAME_HEIGHT))
+fps1 = cap1.get(cv2.CAP_PROP_FPS)
+fourcc1 = cv2.VideoWriter_fourcc(* 'DIVX')
+
+cap2 = cv2.VideoCapture('./data/videos/backdoor.mp4')
+if not cap2.isOpened():
+    print("Video2 open failed!")
+w2 = round(cap2.get(cv2.CAP_PROP_FRAME_WIDTH))
+h2 = round(cap2.get(cv2.CAP_PROP_FRAME_HEIGHT))
+fps2 = cap2.get(cv2.CAP_PROP_FPS)
+fourcc2 = cv2.VideoWriter_fourcc(* 'XVID')
+
+size = (1020, 1020)
+add_size = (2040, 1020)
+writer = cv2.VideoWriter('demo2.mp4', fourcc1, fps1, add_size)
+currentFrame = 0
+
+while(True):
+    return_value1, leftimg = cap1.read()
+    return_value2, rightimg = cap2.read()
+
+    if return_value1 == False:
+        break
+    if return_value2 == False:
+        break
+    # if currentFrame == 2:   #if you want to drop frame
+    #     currentFrame = 0
+    # if currentFrame == 0:
+
+    leftimg = cv2.resize(leftimg, size)
+    rightimg = cv2.resize(rightimg, size)
+    add_img = np.hstack((leftimg, rightimg))
+    cv2.imshow("Color", add_img)
+    writer.write(add_img)
+    if cv2.waitKey(1)&0xFF ==27:
+        break
+    #currentFrame += 1
+
+cap1.release()
+cap2.release()
+cv2.destroyAllWindows()
+```
 The videos are combined for simultaneous identification.
 
 
