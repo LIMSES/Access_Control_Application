@@ -47,7 +47,7 @@ If you run the save_model.py, checkpoints directory is created and tensorflow mo
 ```bash
 python save_model.py --model yolov4
 ```
-## Videos
+## Downloading Sample Videos
 In a place with one entrance, the application can be operated based on real-time images of that one entrance.
 Likewise, in another place with two or more entrances, the application should be operated based on two or more images.
 Simultaneous processing can be done through communication, such as ROS systems, but this tutorial combines images for easy processing.<br>
@@ -62,11 +62,19 @@ Download sample videos: https://drive.google.com/file/d/10Cts1ObT_e_8B6jleXzUCb2
 ### Back door
 <p align="center"><img src="data/helpers/backdoor.JPG" width="400" height="240"\></p>
 
-### Combining two 
+## Combining Two Videos
+The videos are combined for simultaneous identification.
+
+### Import libraries
 ```bash
 import cv2 
 import numpy as np
-
+```
+### Get the videos and save the information
+FourCC means four character code and a 4-byte string is a unique character that separates the data type.
+FourCC is mainly used to distinguish video codecs in video files. Available codecs include Divx, Xvid, H.264, MP4V, etc.
+You can change the codec you want to use.
+```bash
 cap1 = cv2.VideoCapture('./data/videos/frontdoor.mp4')
 if not cap1.isOpened():
     print("Video1 open failed!")
@@ -82,12 +90,18 @@ w2 = round(cap2.get(cv2.CAP_PROP_FRAME_WIDTH))
 h2 = round(cap2.get(cv2.CAP_PROP_FRAME_HEIGHT))
 fps2 = cap2.get(cv2.CAP_PROP_FPS)
 fourcc2 = cv2.VideoWriter_fourcc(* 'XVID')
-
+```
+### Define output parameter
+It stores values to change the size of each image and specifies the output information of the combined image.
+```bash
 size = (1020, 1020)
 add_size = (2040, 1020)
 writer = cv2.VideoWriter('demo2.mp4', fourcc1, fps1, add_size)
 currentFrame = 0
-
+```
+### Combine two videos
+Set each image to merge left and right. The currentFrame paramter can be used to reduce the number of frames.
+```bash
 while(True):
     return_value1, leftimg = cap1.read()
     return_value2, rightimg = cap2.read()
@@ -107,13 +121,17 @@ while(True):
     writer.write(add_img)
     if cv2.waitKey(1)&0xFF ==27:
         break
-    #currentFrame += 1
+    # currentFrame += 1
 
 cap1.release()
 cap2.release()
 cv2.destroyAllWindows()
 ```
-The videos are combined for simultaneous identification.
+### Run with terminal(powershell)
+If you have installed all the GitHub repository, you can run the code through the terminal.
+```bash
+python video_sum.py
+```
 
 
 
