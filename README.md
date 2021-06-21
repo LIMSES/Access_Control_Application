@@ -16,3 +16,5 @@ It was created using deep learning, Kalman filter and Hungarian algorithm.<br>
   * [YOLOv4 and Deep SORT: https://github.com/theAIGuysCode/yolov4-deepsort](https://github.com/theAIGuysCode/yolov4-deepsort)
   * [Counting the passing objects: https://github.com/emasterclassacademy/Single-Multiple-Custom-Object-Detection-and-Tracking](https://github.com/emasterclassacademy/Single-Multiple-Custom-Object-Detection-and-Tracking)
 
+## Requirements
+Before To get started, install the proper dependencies either via Anaconda or Pip.
