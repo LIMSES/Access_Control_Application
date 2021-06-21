@@ -506,6 +506,9 @@ if __name__ == '__main__':
     except SystemExit:
         pass
 ```
+Baselines are blue and the ranges for storing the central value are green.
+<p align="center"><img src="data/helpers/baseline.JPG" width="520" height="260"\></p>
+
 ### Run with terminal(powershell)
 You can run the above code through the terminal.
 ```bash
